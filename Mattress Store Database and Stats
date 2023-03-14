@@ -1,0 +1,27 @@
+#In this SQL, I'm querying a database for a mattress store. I first created a table using various mattresses including their brands, price, height, and firmness rating.
+#I then displayed the mattress options that were less than $1500 and ordered them by price. 
+#Additionally, I averaged the mattress heights to find the average height among the table. 
+
+CREATE TABLE mattress_storefront (id INTEGER PRIMARY KEY, product_name TEXT, brand TEXT, price INTEGER, mattress_height_inches INTEGER, firmness_scale INTEGER);
+
+INSERT INTO mattress_storefront VALUES 
+(1, 'ComfortGrande', 'Novaform', 500, 9, 5),
+(2, 'Relaxed Firm', 'Loom & Leaf', 2395, 10, 3),
+(3, 'Original', 'Tuft & Needle', 780, 12, 3),
+(4, 'Classic', 'Saatva', 1495, 18, 4),
+(5, 'Luxe Hybrid', 'Allswell', 599, 12, 3),
+(6, 'Dusk Luxe', 'Helix', 2499, 14, 4),
+(7, 'Original 10', 'Nolah', 1798, 10, 3),
+(8, 'Elite Hybrid', 'Bear', 3565, 14, 1),
+(9, 'Tempur-Cloud', 'Tempur-Pedic', 2399, 10, 3),
+(10, 'Original', 'Casper', 1520, 12, 4),
+(11, 'T&N Original', 'Tuft & Needle', 1395, 10, 4),
+(12, 'Estate Mattress', 'Stearns & Foster', 4298, 14.5, 2),
+(13, 'Lux Hybrid', 'Puffy', 3598, 12, 3),
+(14, 'Purple Mattress', 'Purple', 1799, 9.25, 4),
+(15, 'Perfect Sleeper', 'Serta', 2499, 15, 4);
+
+SELECT * FROM mattress_storefront;
+SELECT * FROM mattress_storefront WHERE price < 1500 ORDER BY price;
+
+SELECT AVG(mattress_height_inches) FROM mattress_storefront;

@@ -59,4 +59,16 @@ SELECT COUNT(distinct c.acctnum), AVG(f.quantity * f.price)
     AND length(orderID) = 6
     AND orderID <> 'Order ID';
 
+ ---8. List all the products sold in Los Angeles in February, and include how many of each were sold.---
+SELECT product, quantity, location
+    FROM BIT_DB.FebSales
+    WHERE location LIKE '%Los Angeles%'
+    AND length(orderID) = 6
+    AND orderID <> 'Order ID';
     
+SELECT product, SUM(quantity)
+    FROM BIT_DB.FebSales
+    WHERE location LIKE '%Los Angeles%'
+    AND length(orderID) = 6
+    AND orderID <> 'Order ID'
+    GROUP BY product;   

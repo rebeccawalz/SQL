@@ -1,0 +1,90 @@
+/* This is the final SQL Project in my SQL Bootcamp. This dataset, chinook, represents a digital media store and includes tables for artists, albums, media tracks, invoices, and customers. */
+
+/* 1. Show Customers (their full names, customer ID, and country) who are not in the US. (Hint: != or <> can be used to say "is not equal to").*/
+SELECT CustomerID, FirstName, LastName, Country
+    FROM chinook.customers
+    WHERE country != 'USA'
+    ORDER BY country;
+    
+/* 2. Show only the Customers from Brazil. */
+SELECT *
+    FROM chinook.customers
+    WHERE country = 'Brazil';
+    
+/* 3. Find the Invoices of customers who are from Brazil. The resulting table should show the customer's full name, Invoice ID, Date of the invoice, and billing country. */
+SELECT customerID, c.firstname, c.lastname, i.invoiceid, i.invoicedate, i.billingcountry
+    FROM chinook.invoices i
+    LEFT JOIN chinook.customers c
+    ON i.customerID = c.customerID
+    WHERE i.billingcountry = 'Brazil';
+    
+/* 4. Show the Employees who are Sales Agents. */
+SELECT *
+    FROM chinook.employees
+    WHERE title = 'Sales Support Agent';
+    
+/* 5. Find a unique/distinct list of billing countries from the Invoice table. */
+SELECT distinct BillingCountry
+    FROM chinook.invoices;
+    
+/* 6. Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name. */
+SELECT e.lastname, e.firstname, i.invoiceID
+    FROM chinook.employees e
+    JOIN chinook.customers c ON c.supportrepid = e.employeeID
+    JOIN chinook.invoices i ON i.customerID = c.customerID;
+
+/* 7. Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers. */
+SELECT e.lastname as E_Last, e.firstname as E_First, c.lastname as C_Last, c.firstname as C_First, c.country, i.total
+    FROM chinook.employees e
+    JOIN chinook.customers c ON c.supportrepid = e.employeeID
+    JOIN chinook.invoices i ON i.customerID = c.customerID;
+
+/* 8. How many Invoices were there in 2009? */
+SELECT COUNT(invoicedate)
+    FROM chinook.invoices 
+    WHERE invoicedate BETWEEN '2009-01-01' AND '2009-12-31';
+    
+/* 9. What are the total sales for 2009? */
+SELECT SUM(total)
+    FROM chinook.invoices 
+    WHERE invoicedate BETWEEN '2009-01-01' AND '2009-12-31';
+
+/* 10. Write a query that includes the purchased track name with each invoice line ID. */
+SELECT t.name, i.invoiceID
+    FROM chinook.invoices i
+    JOIN chinook.invoice_items ii ON ii.invoiceID = i.invoiceID
+    JOIN chinook.tracks t ON t.trackID = ii.trackID;
+
+/* 11. Write a query that includes the purchased track name AND artist name with each invoice line ID. */
+SELECT t.name as 'Track Name', ar.name as 'Artist Name', i.invoiceID as 'ID'
+    FROM chinook.invoices i
+    JOIN chinook.invoice_items ii ON ii.invoiceID = i.invoiceID
+    JOIN chinook.tracks t ON t.trackID = ii.trackID
+    JOIN chinook.albums a ON t.albumID = a.albumID
+    JOIN chinook.artists ar ON a.artistID = ar.artistID;
+
+/* 12. Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre. */
+SELECT t.name as 'Track Name', a.title as 'Album', m.name as 'Media Type', g.name as 'Genre'
+    FROM chinook.tracks t
+    JOIN chinook.albums a ON a.albumID = t.albumID
+    JOIN chinook.media_types m ON m.mediatypeID = t.mediatypeID
+    JOIN chinook.genres g ON g.genreID = t.genreID;
+
+/* 13. Show the total sales made by each sales agent. */
+SELECT e.firstname, e.lastname, ROUND(SUM(i.total), 2) as 'Total Sales'
+    FROM chinook.invoices i
+    JOIN chinook.customers c ON c.customerID = i.customerID
+    JOIN chinook.employees e ON e.employeeID = c.supportrepID
+    WHERE e.title = 'Sales Support Agent'
+    GROUP BY e.firstname;
+
+/* 14. Which sales agent made the most dollars in sales in 2009? */
+SELECT e.firstname, e.lastname, ROUND(SUM(i.total), 2) as 'Total Sales'
+    FROM chinook.invoices i
+    JOIN chinook.customers c ON c.customerID = i.customerID
+    JOIN chinook.employees e ON e.employeeID = c.supportrepID
+    WHERE e.title = 'Sales Support Agent'
+    AND i.invoicedate BETWEEN '2009-01-01' AND '2009-12-31'
+    GROUP BY e.firstname
+    ORDER BY 'Total Sales' DESC
+    LIMIT 1;
